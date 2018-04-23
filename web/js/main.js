@@ -1,5 +1,5 @@
 var G = {};
-//$(document).ready(function () {
+$(document).ready(function () {
     G.menu = $('#menu');
     G.navButtons = $(menu).children('li');
     G.blocks = $('section');
@@ -14,90 +14,66 @@ var G = {};
 
 
     G.cart = {
-        "prodA": 0,
+        "amount": 0,
         "price": 0,
         "items": [],
-        addProduct(id, price, amount) {
-            cart.price = 0;
-            cart.prodA = 0;
+        addProduct(id, productPrice, productAmount) {
+            this.price = 0;
+            this.amount = 0;
 
-            let l = cart.items.length;
+            let l = this.items.length;
 
             if (l > 0) {
                 for (let i = 0; i < l; i++) {
-                    if (cart.items[i].id == id) {
-                        cart.items[i].amount += amount;
+                    if (this.items[i].id == id) {
+                        this.items[i].amount += amount;
                         break;
                     } else if (i == l - 1) {
-                        cart.items.push(new Product(id, price, amount));
+                        this.items.push(new G.Product(id, productPrice, productAmount));
                     }
                 }
             } else {
-                cart.items.push(new Product(id, price, amount));
+                this.items.push(new G.Product(id, productPrice, productAmount));
             }
 
-            for (let i = 0; i < cart.items.length; i++) {
-                cart.price += cart.items[i].price * cart.items[i].amount;
-                cart.prodA += cart.items[i].amount;
+            for (let i = 0; i < this.items.length; i++) {
+                this.price += this.items[i].price * this.items[i].amount;
+                this.amount += this.items[i].amount;
             }
         },
         deleteProduct(id) {
-            cart.price = 0;
-            cart.prodA = 0;
+            this.price = 0;
+            this.amount = 0;
 
             this.items.splice(id, 1);
 
-            for (let i = 0; i < cart.items.length; i++) {
-                cart.price += cart.items[i].price * cart.items[i].amount;
-                cart.prodA += cart.items[i].amount;
+            for (let i = 0; i < this.items.length; i++) {
+                this.price += this.items[i].price * this.items[i].amount;
+                this.amount += this.items[i].amount;
             }
         }
     };
 
-    G.Product = class Product {
-        constructor(id, price, amount) {
-            this.id = id;
-            this.price = price;
-            this.amount = amount;
-        }
-    }
+    G.Product = function Product(id, price, amount) {
+        this.id = id;
+        this.price = price;
+        this.amount = amount;
+    };
 
-    (function init() {
-        // check url to show appropriate page
-        G.hashHandler();
-
-        // enable button clicks
-        for (let i = 0, l = navButtons.length; i < l; i++) {
-            $(G.navButtons[i]).click(G.navButtonHandler);
-        }
-
-        // enable full change on user info edit
-        $(G.fullChange).click(G.fullChangeToggler);
-
-        // enable back / forward buttons
-        window.onhashchange = G.hashHandler;
-
-        // add products to cart buttons
-        for (let i = 0, l = G.buttonsAddToCart.length; i < l; i++) {
-            $(G.buttonsAddToCart[i]).click(G.addToCart);
-        }
-    })();
-
-
-    // website browsing
-    G.navButtonHandler = function() {
+// website browsing
+    G.navButtonHandler = function () {
         // set block in url
         let prevButtonId = location.hash;
-        if (!prevButtonId) 
+        if (!prevButtonId)
             $("#main").removeClass('active');
         else
             $(prevButtonId).removeClass('active');
 
         location.hash = $(this).attr('id');
         $(this).addClass('active');
-    }
+    };
 
-    G.arrayToggle = function(mode) {
+    G.arrayToggle = function (mode) {
         switch (mode) {
             case 2:
                 // hide all blocks
@@ -118,9 +94,9 @@ var G = {};
                 }
                 break;
         }
-    }
+    };
 
-    G.showBlock = function(id) {
+    G.showBlock = function (id) {
         G.arrayToggle(2);		// hide all blocks
         // show block based on button id
         switch (id) {
@@ -161,23 +137,23 @@ var G = {};
                 document.title = "Company main page";
                 $(G.blocks[0]).toggle();
         }
-    }
+    };
 
-    G.isLoggedIn = function() {	// check user login
+    G.isLoggedIn = function () {	// check user login
 //        return 0;	// 0 - not logged in
         return 1;	// 1 - logged in
 //        return 2;	// 2 - logged in as admin
-    }
+    };
 
-    G.fullChangeToggler = function() {
+    G.fullChangeToggler = function () {
         if (this.checked) {
             G.arrayToggle(4);
         } else {
             G.arrayToggle(3);
         }
-    }
+    };
 
-    G.hashHandler = function() {
+    G.hashHandler = function () {
         G.showBlock(location.hash);
         $(location.hash).addClass('active');
         if (!location.hash) {
@@ -186,23 +162,21 @@ var G = {};
         }
         // always stay on top (othervise will scroll to block begining)
         window.scrollTo(0, 0);
-    }
+    };
 
-    G.findButton = function(buttonId) {
+    G.findButton = function (buttonId) {
         for (let i = 0, l = G.navButtons.length; i < l; i++) {
             if ($(G.navButtons[i]).attr('id') == buttonId)
                 return G.navButtons[i];
         }
         return null;
-    }
+    };
 
-
-    // cart 
-    G.addToCart = function() {
+// cart 
+    G.addToCart = function () {
         let name;
         let price = +$(this).parent().prev().prev().children().text();
         let amount = +$(this).parent().prev().children().val();
-
 
         let prodId;
         for (let i = 0; i < G.buttonsAddToCart.length; i++) {
@@ -216,16 +190,16 @@ var G = {};
             G.cart.addProduct(prodId, price, amount);
             name = G.productNameNodes[parseInt((prodId - 1) / 3)];
 
-            G.productTotalAmount.text(cart.price + "$");
+            G.productTotalAmount.text(G.cart.price + "$");
 
             $(this).parent().prev().children().val(0);
 
             $(G.messageBox).text(`${name.innerHTML} (${price}$) * ${amount} = ${amount * price}$ added to cart`);
             $(G.messageBox).fadeIn().delay(2000).fadeOut();
         }
-    }
+    };
 
-    G.loadCart = function() {
+    G.loadCart = function () {
         $(G.cartList).empty();
         if (G.cart.items.length) {
             let fragment = document.createDocumentFragment();
@@ -243,7 +217,7 @@ var G = {};
 //                $(name).text(` Name `);
                 $(price).text(` (${G.cart.items[i].price})$ `);
                 $(amount).text(`* ${G.cart.items[i].amount} `);
-                $(fullPrice).text(`= ${G.cart.items[i].amount * cart.items[i].price}`);
+                $(fullPrice).text(`= ${G.cart.items[i].amount * G.cart.items[i].price}`);
 
                 $(clear).text("Delete");
                 $(clear).click(function () {
@@ -262,12 +236,33 @@ var G = {};
                 $(li).append(clear)/*.append(name)*/.append(price).append(amount).append(fullPrice).append(id);
                 $(fragment).append(li);
             }
-            $(G.cartTotalAmount).text(cart.price + "$");
+            $(G.cartTotalAmount).text(G.cart.price + "$");
             $(G.cartList).append(fragment);
         }
-    }
+    };
 
-//});
+
+    (function init() {
+        // check url to show appropriate page
+        G.hashHandler();
+
+        // enable button clicks
+        for (let i = 0, l = G.navButtons.length; i < l; i++) {
+            $(G.navButtons[i]).click(G.navButtonHandler);
+        }
+
+        // enable full change on user info edit
+        $(G.fullChange).click(G.fullChangeToggler);
+
+        // enable back / forward buttons
+        window.onhashchange = G.hashHandler;
+
+        // add products to cart buttons
+        for (let i = 0, l = G.buttonsAddToCart.length; i < l; i++) {
+            $(G.buttonsAddToCart[i]).click(G.addToCart);
+        }
+    })();
+});
 
 
 
