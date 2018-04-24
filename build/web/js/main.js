@@ -1,94 +1,59 @@
 var G = {};
-//$(document).ready(function () {
-    G.menu = $('#menu');
-    G.navButtons = $(menu).children('li');
-    G.blocks = $('section');
-    G.fullChange = $('#fullChange');
-    G.noChangeInputs = [$('#userMail'), $('#userPass')];
-    G.buttonsAddToCart = $('.addToCart');
-    G.productNameNodes = $('.productName');
-    G.messageBox = $('#message');
-    G.cartList = $('#cartList');
-    G.productTotalAmount = $('#productTotalAmount');	// Product total amount span
-    G.cartTotalAmount = $('#cartTotalAmount');	// Cart total amount span
-
+$(document).ready(function () {
+    navButtons = $($('#menu')).children('li');
 
     G.cart = {
-        "prodA": 0,
+        "amount": 0,
         "price": 0,
         "items": [],
-        addProduct(id, price, amount) {
-            cart.price = 0;
-            cart.prodA = 0;
+        addProduct(id, productPrice, productAmount) {
+            this.price = 0;
+            this.amount = 0;
 
-            let l = cart.items.length;
+            let l = this.items.length;
 
             if (l > 0) {
                 for (let i = 0; i < l; i++) {
-                    if (cart.items[i].id == id) {
-                        cart.items[i].amount += amount;
+                    if (this.items[i].id == id) {
+                        this.items[i].amount += amount;
                         break;
                     } else if (i == l - 1) {
-                        cart.items.push(new Product(id, price, amount));
+                        this.items.push(new G.Product(id, productPrice, productAmount));
                     }
                 }
             } else {
-                cart.items.push(new Product(id, price, amount));
+                this.items.push(new G.Product(id, productPrice, productAmount));
             }
 
-            for (let i = 0; i < cart.items.length; i++) {
-                cart.price += cart.items[i].price * cart.items[i].amount;
-                cart.prodA += cart.items[i].amount;
+            for (let i = 0; i < this.items.length; i++) {
+                this.price += this.items[i].price * this.items[i].amount;
+                this.amount += this.items[i].amount;
             }
         },
         deleteProduct(id) {
-            cart.price = 0;
-            cart.prodA = 0;
+            this.price = 0;
+            this.amount = 0;
 
             this.items.splice(id, 1);
 
-            for (let i = 0; i < cart.items.length; i++) {
-                cart.price += cart.items[i].price * cart.items[i].amount;
-                cart.prodA += cart.items[i].amount;
+            for (let i = 0; i < this.items.length; i++) {
+                this.price += this.items[i].price * this.items[i].amount;
+                this.amount += this.items[i].amount;
             }
         }
     };
 
-    G.Product = class Product {
-        constructor(id, price, amount) {
-            this.id = id;
-            this.price = price;
-            this.amount = amount;
-        }
-    }
+    G.Product = function Product(id, price, amount) {
+        this.id = id;
+        this.price = price;
+        this.amount = amount;
+    };
 
-    (function init() {
-        // check url to show appropriate page
-        G.hashHandler();
-
-        // enable button clicks
-        for (let i = 0, l = navButtons.length; i < l; i++) {
-            $(G.navButtons[i]).click(G.navButtonHandler);
-        }
-
-        // enable full change on user info edit
-        $(G.fullChange).click(G.fullChangeToggler);
-
-        // enable back / forward buttons
-        window.onhashchange = G.hashHandler;
-
-        // add products to cart buttons
-        for (let i = 0, l = G.buttonsAddToCart.length; i < l; i++) {
-            $(G.buttonsAddToCart[i]).click(G.addToCart);
-        }
-    })();
-
-
-    // website browsing
-    G.navButtonHandler = function() {
+// website browsing
+    function navButtonHandler() {
         // set block in url
         let prevButtonId = location.hash;
-        if (!prevButtonId) 
+        if (!prevButtonId)
             $("#main").removeClass('active');
         else
             $(prevButtonId).removeClass('active');
@@ -97,88 +62,40 @@ var G = {};
         $(this).addClass('active');
     }
 
-    G.arrayToggle = function(mode) {
-        switch (mode) {
-            case 2:
-                // hide all blocks
-                for (let i = 0, l = G.blocks.length; i < l; i++) {
-                    $(G.blocks).hide();
-                }
-                break;
-            case 3:
-                // set user mail and pass fields unchangable
-                for (let i = 0, l = G.noChangeInputs.length; i < l; i++) {
-                    $(G.noChangeInputs[i]).prop("readonly", true);
-                }
-                break;
-            case 4:
-                // set user mail and pass fields changable
-                for (let i = 0, l = G.noChangeInputs.length; i < l; i++) {
-                    $(G.noChangeInputs[i]).prop("readonly", false);
-                }
-                break;
-        }
-    }
-
-    G.showBlock = function(id) {
-        G.arrayToggle(2);		// hide all blocks
+    function showBlock(id) {
         // show block based on button id
         switch (id) {
             case "#about":
                 document.title = "About our company";
-                $(G.blocks[1]).toggle();
+                Cargar("pages/about.jsp", "content");
                 break;
             case "#contacts":
                 document.title = "Our contacts";
-                $(G.blocks[2]).toggle();
+                Cargar("pages/contacts.jsp", "content");
                 break;
             case "#products":
                 document.title = "Our products";
-                $(G.blocks[3]).toggle();
+                Cargar("pages/products.jsp", "content");
                 break;
             case "#cart":
                 document.title = "Your cart";
-//                if (G.isLoggedIn()) {
-//                    $(G.blocks[8]).toggle();
-//                } else {
-                $(G.blocks[4]).toggle();
-                G.loadCart();
-//                }
+                Cargar("pages/cart.jsp", "content");
                 break;
             case "#user":
                 document.title = "User";
-//                if (G.isLoggedIn()) {
-//                    $(G.blocks[7]).toggle();
-//                } else {
-                $(G.blocks[5]).toggle();
-//                }
+                Cargar("pages/user.jsp", "content");
                 break;
             case "#admin":
                 document.title = "Admin panel";
-                $(G.blocks[6]).toggle();
-                break;
+                Cargar("pages/admin.jsp", "content");
             default:
                 document.title = "Company main page";
-                $(G.blocks[0]).toggle();
+                Cargar("pages/main.jsp", "content");
         }
     }
 
-    G.isLoggedIn = function() {	// check user login
-//        return 0;	// 0 - not logged in
-        return 1;	// 1 - logged in
-//        return 2;	// 2 - logged in as admin
-    }
-
-    G.fullChangeToggler = function() {
-        if (this.checked) {
-            G.arrayToggle(4);
-        } else {
-            G.arrayToggle(3);
-        }
-    }
-
-    G.hashHandler = function() {
-        G.showBlock(location.hash);
+    function hashHandler() {
+        showBlock(location.hash);
         $(location.hash).addClass('active');
         if (!location.hash) {
             $("#main").addClass('active');
@@ -188,86 +105,22 @@ var G = {};
         window.scrollTo(0, 0);
     }
 
-    G.findButton = function(buttonId) {
-        for (let i = 0, l = G.navButtons.length; i < l; i++) {
-            if ($(G.navButtons[i]).attr('id') == buttonId)
-                return G.navButtons[i];
-        }
-        return null;
-    }
+// cart 
 
+    (function init() {
+        // check url to show appropriate page
+        hashHandler();
 
-    // cart 
-    G.addToCart = function() {
-        let name;
-        let price = +$(this).parent().prev().prev().children().text();
-        let amount = +$(this).parent().prev().children().val();
-
-
-        let prodId;
-        for (let i = 0; i < G.buttonsAddToCart.length; i++) {
-            if (this == G.buttonsAddToCart[i]) {
-                prodId = i + 1;
-                break;
-            }
+        // enable nav button clicks
+        for (let i = 0, l = navButtons.length; i < l; i++) {
+            $(navButtons[i]).click(navButtonHandler);
         }
 
-        if (prodId && amount != 0) {
-            G.cart.addProduct(prodId, price, amount);
-            name = G.productNameNodes[parseInt((prodId - 1) / 3)];
+        // enable back / forward buttons
+        window.onhashchange = hashHandler;
 
-            G.productTotalAmount.text(cart.price + "$");
-
-            $(this).parent().prev().children().val(0);
-
-            $(G.messageBox).text(`${name.innerHTML} (${price}$) * ${amount} = ${amount * price}$ added to cart`);
-            $(G.messageBox).fadeIn().delay(2000).fadeOut();
-        }
-    }
-
-    G.loadCart = function() {
-        $(G.cartList).empty();
-        if (G.cart.items.length) {
-            let fragment = document.createDocumentFragment();
-
-            for (let i = 0, l = G.cart.items.length; i < l; i++) {
-                let li = document.createElement('li');
-                let id = document.createElement('p');
-                let name = document.createElement('p');
-                let price = document.createElement('p');
-                let amount = document.createElement('p');
-                let fullPrice = document.createElement('p');
-                let clear = document.createElement('p');
-
-                $(id).text(G.cart.items[i].id);
-//                $(name).text(` Name `);
-                $(price).text(` (${G.cart.items[i].price})$ `);
-                $(amount).text(`* ${G.cart.items[i].amount} `);
-                $(fullPrice).text(`= ${G.cart.items[i].amount * cart.items[i].price}`);
-
-                $(clear).text("Delete");
-                $(clear).click(function () {
-                    let itemIndex;
-                    for (let j = 0, jl = G.cart.items.length; j < jl; j++) {
-                        if (G.cart.items[j].id == id.innerHTML)
-                            itemIndex = j;
-                    }
-                    G.cart.deleteProduct(itemIndex);
-                    $(G.cartList).children()[itemIndex].remove();
-
-                    $(G.productTotalAmount).text(G.cart.price + "$");
-                    $(G.cartTotalAmount).text(G.cart.price + "$");
-                });
-
-                $(li).append(clear)/*.append(name)*/.append(price).append(amount).append(fullPrice).append(id);
-                $(fragment).append(li);
-            }
-            $(G.cartTotalAmount).text(cart.price + "$");
-            $(G.cartList).append(fragment);
-        }
-    }
-
-//});
+    })();
+});
 
 
 

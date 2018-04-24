@@ -5,7 +5,7 @@
     }
     .userData{
         width: 40vw;	
-        margin: 10vh 0 5vh 24vw;
+        margin: 5vh 0 5vh 24vw;
     }
 }
 @media screen and (max-width: 1199px) {/* Small */
@@ -15,7 +15,7 @@
     }
     .userData{
         width: 50vw;	
-        margin: 10vh 0 5vh 19.5vw;
+        margin: 5vh 0 5vh 19.5vw;
     }
 }
 @font-face {
@@ -116,7 +116,7 @@ input, button{
     width: 5vw;
 }
 .userData{
-    height: 62vh;	
+    height: 67vh;	
 }
 .addToCart{
     margin:0 1vmin 1vmin 1vmin;

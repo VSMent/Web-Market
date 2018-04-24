@@ -46,7 +46,6 @@ public class LoginUser extends HttpServlet {
             }
 
 //            response.sendRedirect("login.jsp");
-
         } else if (actionType.equals("register")) {
             if (dataBase.checkUserDB(email, password, 1)) {    // check email only
                 session.setAttribute("message", "Such user already exist");
@@ -61,58 +60,6 @@ public class LoginUser extends HttpServlet {
         }
 
         response.sendRedirect("#user");
-
-//        int rowcount = 0;
-//        try {
-//            if (usersSmall.last()) {
-//                rowcount = usersSmall.getRow();
-//                usersSmall.beforeFirst();
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(LoginUser.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//
-//        if (actionType.equals("register")) {
-//
-//            if (rowcount != 0) { // there are users
-//                try {
-//                    while (usersSmall.next()) {
-//                        String tempEmail = usersSmall.getString("email");
-//
-//                        if (!email.equals(tempEmail)) { // no such email 
-//                            // register
-//                            // go to more info page
-//                            break;
-//                        }
-//
-//                    }
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(LoginUser.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            } else {  // there is no any users
-//                // register
-//                // go to more info page
-//            }
-//
-//        } else if (actionType.equals("login")) {
-//            try {
-//                while (usersSmall.next()) {
-//                    String tempEmail = usersSmall.getString("email");
-//                    String tempPass = usersSmall.getString("password");
-//
-//                    if (email.equals(tempEmail) && password.equals(tempPass)) {
-//                        // login
-//                        // go to user page
-//                        break;
-//                    }
-//                }
-//            } catch (SQLException ex) {
-//                Logger.getLogger(LoginUser.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//
-//            // no such user
-//            // go to register page
-//        }
     }
 
     @Override

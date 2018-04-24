@@ -10,7 +10,7 @@
     <body>
         <%--<jsp:include page="<%="includes/"+p+".jsp"%>"/>--%>
         <jsp:include page="<%="pages/header.jsp"%>"/>
-
+<%--
         <jsp:include page="<%="pages/main.jsp"%>"/>
         <jsp:include page="<%="pages/about.jsp"%>"/>
         <jsp:include page="<%="pages/contacts.jsp"%>"/>
@@ -18,6 +18,8 @@
         <jsp:include page="<%="pages/cart.jsp"%>"/>
         <jsp:include page="<%="pages/user.jsp"%>"/>
         <jsp:include page="<%="pages/admin.jsp"%>"/>
+--%>
+<div id="content"></div>
         <script
             src="http://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="

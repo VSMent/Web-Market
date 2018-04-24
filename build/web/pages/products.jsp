@@ -33,7 +33,7 @@
                 String name = products.getString("name");
                 String description = products.getString("description");
                 String image = products.getString("image");
-                
+
                 float price = products.getFloat("price");
                 int in_pack = products.getInt("in_pack");
         %>
@@ -73,4 +73,5 @@
             </td>
         </tr>
     </table>
+    <script src="js/products.js"></script>
 </section>
