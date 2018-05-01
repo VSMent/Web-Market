@@ -51,15 +51,7 @@ $(document).ready(function () {
 
 // website browsing
     function navButtonHandler() {
-        // set block in url
-        let prevButtonId = location.hash;
-        if (!prevButtonId)
-            $("#main").removeClass('active');
-        else
-            $(prevButtonId).removeClass('active');
-
         location.hash = $(this).attr('id');
-        $(this).addClass('active');
     }
 
     function showBlock(id) {
@@ -95,6 +87,14 @@ $(document).ready(function () {
     }
 
     function hashHandler() {
+        if (G.hash != location.hash) {
+            if(G.hash){
+                $(G.hash).removeClass('active');
+            }
+            G.hash = location.hash;
+            $(G.hash).addClass('active');
+        }
+
         showBlock(location.hash);
         $(location.hash).addClass('active');
         if (!location.hash) {
