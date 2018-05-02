@@ -80,6 +80,7 @@ $(document).ready(function () {
             case "#admin":
                 document.title = "Admin panel";
                 Cargar("pages/admin.jsp", "content");
+                break;
             default:
                 document.title = "Company main page";
                 Cargar("pages/main.jsp", "content");

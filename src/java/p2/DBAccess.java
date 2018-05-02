@@ -60,21 +60,6 @@ public class DBAccess {
         return result;
     }
 
-    public ResultSet getUsersSmallSet() {
-        openConnectionDB();
-
-        ResultSet result = null;
-        try {
-            String con;
-            Statement s = conectionDB.createStatement();
-            con = "SELECT id,email,password FROM users";
-            result = s.executeQuery(con);
-        } catch (SQLException e) {
-            System.out.println("Error ejecutando la consulta a la BB.DD....");
-        }
-        return result;
-    }
-
     public boolean accessTest() {
         openConnectionDB();
         return conectionDB != null;
@@ -93,31 +78,6 @@ public class DBAccess {
             } else {
                 con = "SELECT * FROM users WHERE email='" + email + "'";
             }
-            results = s.executeQuery(con);
-
-            if (results.next()) //El usuario/clave se encuentra en la BD
-            {
-                return true;
-            } else //El usuario/clave no se encuentra en la BD
-            {
-                return false;
-            }
-        } catch (Exception e) {
-            //Error en la conexión con la BD
-            System.out.println("No se ha completado la peticion...");
-            return false;
-        }
-    }
-
-    public boolean checkUserComplete(String email, String password) {
-        openConnectionDB();
-
-        ResultSet results = null;
-        try {
-            String con;
-            Statement s = conectionDB.createStatement();
-            //Consulta, buscamos una correspondencia usuario/clave
-            con = "SELECT name FROM users WHERE email='" + email + "' and password='" + password + "'";
             results = s.executeQuery(con);
 
             if (results.next()) //El usuario/clave se encuentra en la BD
@@ -169,6 +129,84 @@ public class DBAccess {
             System.out.println("No se ha completado la peticion...");
             return false;
         }
+    }
+
+    public ResultSet loginUser(String email, String password) {
+        openConnectionDB();
+
+        ResultSet user = null;
+        try {
+            String con;
+            Statement s = conectionDB.createStatement();
+
+            con = "SELECT * FROM users WHERE email='" + email + "' and password='" + password + "'";
+
+            user = s.executeQuery(con);
+        } catch (Exception e) {
+            //Error en la conexión con la BD
+            System.out.println("No se ha completado la peticion...");
+        }
+        return user;
+    }
+
+    public boolean updateUser(String email, String password, String name, String surname, String phoneNumber, String country, String city, String address, String passport, int id) {
+        openConnectionDB();
+
+        try {
+            String updateString;
+            Statement s = conectionDB.createStatement();
+            //Consulta, buscamos una correspondencia usuario/clave
+            updateString = "UPDATE users SET "
+                    + "email = '"
+                    + email + "', "
+                    + "password = '"
+                    + password + "', "
+                    + "name = '"
+                    + name + "', "
+                    + "surname = '"
+                    + surname + "', "
+                    + "phone = '"
+                    + phoneNumber + "', "
+                    + "country = '"
+                    + country + "', "
+                    + "city = '"
+                    + city + "', "
+                    + "address = '"
+                    + address + "', "
+                    + "passport = '"
+                    + passport + "' "
+                    + "WHERE id = "
+                    + id;
+            s.executeUpdate(updateString);
+            return true;
+
+        } catch (Exception e) {
+            //Error en la conexión con la BD
+            System.out.println("No se ha completado la peticion...");
+            return false;
+        }
+    }
+
+    public Integer getUserId(String email, String password) {
+        openConnectionDB();
+
+        ResultSet user;
+        Integer userId = null;
+        try {
+            String con;
+            Statement s = conectionDB.createStatement();
+            con = "SELECT id FROM users WHERE email='" + email + "' and password='" + password + "'";
+
+            user = s.executeQuery(con);
+            
+            user.next();
+            userId = Integer.parseInt(user.getString("id"));
+        } catch (Exception e) {
+            //Error en la conexión con la BD
+            System.out.println("No se ha completado la peticion...");
+        }
+
+        return userId;
     }
 
 }

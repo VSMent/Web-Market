@@ -51,15 +51,7 @@ $(document).ready(function () {
 
 // website browsing
     function navButtonHandler() {
-        // set block in url
-        let prevButtonId = location.hash;
-        if (!prevButtonId)
-            $("#main").removeClass('active');
-        else
-            $(prevButtonId).removeClass('active');
-
         location.hash = $(this).attr('id');
-        $(this).addClass('active');
     }
 
     function showBlock(id) {
@@ -88,6 +80,7 @@ $(document).ready(function () {
             case "#admin":
                 document.title = "Admin panel";
                 Cargar("pages/admin.jsp", "content");
+                break;
             default:
                 document.title = "Company main page";
                 Cargar("pages/main.jsp", "content");
@@ -95,6 +88,14 @@ $(document).ready(function () {
     }
 
     function hashHandler() {
+        if (G.hash != location.hash) {
+            if(G.hash){
+                $(G.hash).removeClass('active');
+            }
+            G.hash = location.hash;
+            $(G.hash).addClass('active');
+        }
+
         showBlock(location.hash);
         $(location.hash).addClass('active');
         if (!location.hash) {
