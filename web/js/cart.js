@@ -1,7 +1,11 @@
 $(document).ready(function () {
     let cartList = $('#cartList');
     let cartTotalAmount = $('#cartTotalAmount');	// Cart total amount span
+    let cartInput = $('#cartInput');
+    
     loadCart();
+    
+    cartInput.val(cartInput.val()+JSON.stringify(G.cart.items));
 
     function loadCart() {
         $(cartList).empty();
@@ -43,5 +47,4 @@ $(document).ready(function () {
             $(cartList).append(fragment);
         }
     }
-
 });
