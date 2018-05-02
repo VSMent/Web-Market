@@ -13,7 +13,7 @@ $(document).ready(function () {
 
     function addToCart() {
         let name;
-        let price = +$(this).parent().prev().prev().children().text();
+        let price = +$(this).parent().prev().prev().prev().children().text();
         let amount = +$(this).parent().prev().children().val();
 
         let prodId;

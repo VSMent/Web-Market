@@ -12,6 +12,7 @@
             <th>Name</th>
             <th>In pack</th>
             <th>Price per pack</th>
+            <th>Stock</th>
             <th>Amount</th>
             <th>Cart</th>
         </tr>
@@ -29,7 +30,7 @@
                     rowCount = 0;
                 }
 //                String id = products.getString("id");
-//                int stock = products.getInt("stock");
+                int stock = products.getInt("stock");
                 String name = products.getString("name");
                 String description = products.getString("description");
                 String image = products.getString("image");
@@ -44,6 +45,7 @@
             <td rowspan="3"><p class="productName"><%=name%></p><hr><p><%=description%></p></td>
             <td><p><%=in_pack%></p></td>
             <td><p><%=price%></p></td>
+            <td><p><%=stock%></p></td>
             <td><input min="0" value="0" class="productInput" type="number"></td>
             <td><button class="addToCart">Add</button></td>
         </tr>
@@ -51,6 +53,7 @@
         <tr>
             <td><p><%=in_pack%></p></td>
             <td><p><%=price%></p></td>
+            <td><p><%=stock%></p></td>
             <td><input min="0" value="0" class="productInput" type="number"></td>
             <td><button class="addToCart">Add</button></td>
         </tr>
@@ -66,7 +69,7 @@
 
         <!-- Footer -->
         <tr>
-            <td colspan="6">
+            <td colspan="7">
                 <!--<button style="float: left; margin: 1vmin 0 0 1vmin;">Perv page</button>-->
                 <p style="font-weight: bold; text-align: center; display: inline;">Total price: <span id="productTotalAmount">0$</span></p>
                 <!--<button style="float: right; margin: 1vmin 0 0 1vmin;">Next page</button>-->
