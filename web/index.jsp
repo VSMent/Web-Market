@@ -25,6 +25,6 @@
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
         <script src="js/libCapas.js"></script>
-        <script src="js/main.js"></script>
+        <script src="js/global.js"></script>
     </body>
 </html>
