@@ -4,9 +4,17 @@
         <servlet-name>LoginUser</servlet-name>
         <servlet-class>p2.LoginUser</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BuyProducts</servlet-name>
+        <servlet-class>p2.BuyProducts</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginUser</servlet-name>
         <url-pattern>/LoginUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BuyProducts</servlet-name>
+        <url-pattern>/BuyProducts</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
