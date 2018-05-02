@@ -95,7 +95,7 @@
             if (isUserComplete) {
         %>    
         <input class="loginInput" name="logout" value="Change" type="submit"><br>
-        <input class="loginInput" name="logout" value="Log Out" type="submit"><br>
+        <input id="logOut" class="loginInput" name="logout" value="Log Out" type="submit"><br>
         <%
         } else {
         %>
