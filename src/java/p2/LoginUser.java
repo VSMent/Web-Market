@@ -56,14 +56,10 @@ public class LoginUser extends HttpServlet {
                         }
                     } else {    // no such user
                         session.setAttribute("message", "Email and/or password is incorect");
-                        // login again
                     }
                 } else {
                     session.setAttribute("message", "Input email and/or password"); // No email/pass
-                    // login again
                 }
-
-//            response.sendRedirect("login.jsp");
             } else if (actionType.equals("register")) {     // register new user
                 if (dataBase.checkUserDB(email, password, 1)) {    // check email only
                     session.setAttribute("message", "Such user already exist");
@@ -73,7 +69,6 @@ public class LoginUser extends HttpServlet {
                     session.setAttribute("isUserComplete", isUserComplete);
                     session.setAttribute("user", email); //Registramos al usuario en el entorno de la sesión
                     session.setAttribute("password", password); //Registramos al usuario en el entorno de la sesión
-//                session.setAttribute("message", "Email and/or password is incorect");
                 }
             } else if (actionType.equals("fullInfo")) {     // edit info or set full info
                 email = request.getParameter("email");    // it can change
