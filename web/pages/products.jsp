@@ -3,6 +3,17 @@
 <%@page import="java.util.ArrayList"%>
 <section id="block_products">
     <h1>Products</h1>
+    <%
+    Integer userId = (Integer) session.getAttribute("userId");
+
+    if (userId == null) {
+    %>
+
+    <h3>You are not logged in</h3>
+    <h3>Please log in at "user" menu tab</h3>
+    <%
+    } else {
+    %>
     <p id="message"></p>
     <table id="products">
         <caption>Our products list</caption>
@@ -29,7 +40,7 @@
                 if (rowCount == 3) {
                     rowCount = 0;
                 }
-//                String id = products.getString("id");
+                String id = products.getString("id");
                 int stock = products.getInt("stock");
                 String name = products.getString("name");
                 String description = products.getString("description");
@@ -39,35 +50,29 @@
                 int in_pack = products.getInt("in_pack");
         %>
 
-        <%if (rowCount == 0) {%>
         <tr>
+            <%if (rowCount == 0) {%>
             <td rowspan="3"><img class="productPic" src="<%=image%>" alt=""></td>
             <td rowspan="3"><p class="productName"><%=name%></p><hr><p><%=description%></p></td>
-            <td><p><%=in_pack%></p></td>
-            <td><p><%=price%></p></td>
-            <td><p><%=stock%></p></td>
-            <td><input min="0" value="0" class="productInput" type="number"></td>
-            <td><button class="addToCart">Add</button></td>
-        </tr>
-        <%} else {%>
-        <tr>
-            <td><p><%=in_pack%></p></td>
-            <td><p><%=price%></p></td>
-            <td><p><%=stock%></p></td>
-            <td><input min="0" value="0" class="productInput" type="number"></td>
-            <td><button class="addToCart">Add</button></td>
-        </tr>
 
-        <%}%>
+            <%
+                }
+                rowCount++;
+            %>
+
+            <td><p><%=in_pack%></p></td>
+            <td><p><%=price%></p></td>
+            <td><p><%=stock%></p></td>
+            <td><input min="0" value="0" class="productInput" type="number"></td>
+            <td><button class="addToCart" _product="<%=id%>">Add</button></td>
+        </tr>
 
         <%
-                rowCount++;
             }
         %>
 
-
-
         <!-- Footer -->
+
         <tr>
             <td colspan="7">
                 <!--<button style="float: left; margin: 1vmin 0 0 1vmin;">Perv page</button>-->
@@ -77,4 +82,5 @@
         </tr>
     </table>
     <script src="js/products.js"></script>
+    <%}%>
 </section>
