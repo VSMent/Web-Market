@@ -224,7 +224,7 @@ input, button{
 }
 #cartList li{
     /*border: 1px solid red;*/
-    margin-bottom: 1vmin;
+    margin-bottom: 2vmin;
     /*text-align: center;*/
 }
 #cartList li p{
@@ -234,7 +234,7 @@ input, button{
     cursor: pointer;
     border-radius: 5px;
     background-color: silver;
-    padding: 1vmin;
+    padding: 0.5vmin 1vmin;
 }
 #cartList li p:first-child:hover{
     background-color: darkgray;
