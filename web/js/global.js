@@ -6,7 +6,7 @@ $(document).ready(function () {
         "amount": 0,
         "price": 0,
         "items": [],
-        addProduct(id, productPrice, productAmount) {
+        addProduct(productId, productPrice, productAmount, productName) {
             this.price = 0;
             this.amount = 0;
 
@@ -14,15 +14,15 @@ $(document).ready(function () {
 
             if (l > 0) {
                 for (let i = 0; i < l; i++) {
-                    if (this.items[i].id == id) {
+                    if (this.items[i].id == productId) {
                         this.items[i].amount += productAmount;
                         break;
                     } else if (i == l - 1) {
-                        this.items.push(new G.Product(id, productPrice, productAmount));
+                        this.items.push(new G.Product(productId, productPrice, productAmount, productName));
                     }
                 }
             } else {
-                this.items.push(new G.Product(id, productPrice, productAmount));
+                this.items.push(new G.Product(productId, productPrice, productAmount, productName));
             }
 
             for (let i = 0; i < this.items.length; i++) {
@@ -41,7 +41,7 @@ $(document).ready(function () {
                 this.amount += this.items[i].amount;
             }
         },
-        clear(){
+        clear() {
             this.amount = 0;
             this.price = 0;
             this.items = [];
@@ -49,10 +49,11 @@ $(document).ready(function () {
         }
     };
 
-    G.Product = function Product(id, price, amount) {
+    G.Product = function Product(id, price, amount, name) {
         this.id = id;
         this.price = price;
         this.amount = amount;
+        this.name = name;
     };
 
 // website browsing
@@ -95,8 +96,10 @@ $(document).ready(function () {
 
     function hashHandler() {
         if (G.hash != location.hash) {
-            if(G.hash){
+            if (G.hash) {
                 $(G.hash).removeClass('active');
+            }else{
+                $('#main').removeClass('active');
             }
             G.hash = location.hash;
             $(G.hash).addClass('active');
