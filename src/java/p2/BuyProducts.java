@@ -1,5 +1,8 @@
 package p2;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -13,23 +16,19 @@ public class BuyProducts extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(true);
-        
+        DBAccess dataBase = DBAccess.getInstance();
+
         Integer userId = (Integer) session.getAttribute("userId");
         String cart = request.getParameter("cart");
-        
-        if(userId != null  && cart != null){
-            // parse cart (jsonArray)
-            // create db method
-            // send to db
-            // show result
-            // clear cart
-            // decrease storage.
+        String message;
+
+        if (userId != null && !cart.equals("[]")) {
+            message = dataBase.buyProducts(userId, cart);
+        } else {
+            message = "Cart is empty";
         }
-        
-        
-        
-        
-        
+        session.setAttribute("message", message);
+        response.sendRedirect("#cart");
     }
 
     @Override
