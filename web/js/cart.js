@@ -22,8 +22,8 @@ $(document).ready(function () {
                 let clear = document.createElement('p');
 
                 $(id).text(G.cart.items[i].id);
-//                $(name).text(` Name `);
-                $(price).text(` (${G.cart.items[i].price})$ `);
+                $(name).text(` ${G.cart.items[i].name}`);
+                $(price).text(`(${G.cart.items[i].price})$ `);
                 $(amount).text(`* ${G.cart.items[i].amount} `);
                 $(fullPrice).text(`= ${G.cart.items[i].amount * G.cart.items[i].price}`);
 
@@ -40,7 +40,7 @@ $(document).ready(function () {
                     $(cartTotalAmount).text(G.cart.price + "$");
                 });
 
-                $(li).append(clear)/*.append(name)*/.append(price).append(amount).append(fullPrice).append(id);
+                $(li).append(clear).append(name).append(price).append(amount).append(fullPrice).append(id);
                 $(fragment).append(li);
             }
             $(cartTotalAmount).text(G.cart.price + "$");
