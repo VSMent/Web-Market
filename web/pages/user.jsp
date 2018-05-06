@@ -94,12 +94,13 @@
         <%
             if (isUserComplete) {
         %>    
-        <input class="loginInput" name="logout" value="Change" type="submit"><br>
-        <input id="logOut" class="loginInput" name="logout" value="Log Out" type="submit"><br>
+        <input class="loginInput" name="logout" value="Change" type="submit">
+        <input id="logOut" class="loginInput" name="logout" value="Log Out" type="submit" formnovalidate><br>
         <%
         } else {
         %>
-        <input class="loginInput" name="logout" value="Send" type="submit"><br>
+        <input class="loginInput" name="logout" value="Send" type="submit">
+        <input id="logOut" class="loginInput" name="logout" value="Log Out" type="submit" formnovalidate><br>
         <%
             }
         %>

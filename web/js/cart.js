@@ -1,6 +1,6 @@
 $(document).ready(function () {
     let cartList = $('#cartList');
-    let cartTotalAmount = $('#cartTotalAmount');	// Cart total amount span
+    let cartTotalAmount = $('#cartTotalAmount>span');	// Cart total amount span
     let cartInput = $('#cartInput');
     
     loadCart();
@@ -25,7 +25,7 @@ $(document).ready(function () {
                 $(name).text(` ${G.cart.items[i].name}`);
                 $(price).text(`(${G.cart.items[i].price})$ `);
                 $(amount).text(`* ${G.cart.items[i].amount} `);
-                $(fullPrice).text(`= ${G.cart.items[i].amount * G.cart.items[i].price}`);
+                $(fullPrice).text(`= ${G.cart.items[i].amount * G.cart.items[i].price}$`);
 
                 $(clear).text("Delete");
                 $(clear).click(function () {
@@ -45,6 +45,8 @@ $(document).ready(function () {
             }
             $(cartTotalAmount).text(G.cart.price + "$");
             $(cartList).append(fragment);
+            $('#cartTotalAmount').show();
+            $('#epmptyCart').hide();
         }
     }
 });

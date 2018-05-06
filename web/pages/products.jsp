@@ -4,13 +4,13 @@
 <section id="block_products">
     <h1>Products</h1>
     <%
-    Integer userId = (Integer) session.getAttribute("userId");
+        Integer userId = (Integer) session.getAttribute("userId");
 
-    if (userId == null) {
+        if (userId == null) {
     %>
 
-    <h3>You are not logged in</h3>
-    <h3>Please log in at "user" menu tab</h3>
+    <h3 class="bigError">You are not logged in</h3>
+    <h3 class="bigError">Please log in at "user" menu tab</h3>
     <%
     } else {
     %>
@@ -51,7 +51,9 @@
         %>
 
         <tr>
-            <%if (rowCount == 0) {%>
+            <%
+                if (rowCount == 0) {
+            %>
             <td rowspan="3"><img class="productPic" src="<%=image%>" alt=""></td>
             <td rowspan="3"><p class="productName"><%=name%></p><hr><p><%=description%></p></td>
 
