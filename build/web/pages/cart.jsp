@@ -12,3 +12,4 @@
     </form>
 
 </section>
+<<script src="js/cart.js"></script>

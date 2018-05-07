@@ -1,6 +1,12 @@
 package p2;
 
 import java.sql.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBAccess {
 
@@ -60,21 +66,6 @@ public class DBAccess {
         return result;
     }
 
-    public ResultSet getUsersSmallSet() {
-        openConnectionDB();
-
-        ResultSet result = null;
-        try {
-            String con;
-            Statement s = conectionDB.createStatement();
-            con = "SELECT id,email,password FROM users";
-            result = s.executeQuery(con);
-        } catch (SQLException e) {
-            System.out.println("Error ejecutando la consulta a la BB.DD....");
-        }
-        return result;
-    }
-
     public boolean accessTest() {
         openConnectionDB();
         return conectionDB != null;
@@ -93,31 +84,6 @@ public class DBAccess {
             } else {
                 con = "SELECT * FROM users WHERE email='" + email + "'";
             }
-            results = s.executeQuery(con);
-
-            if (results.next()) //El usuario/clave se encuentra en la BD
-            {
-                return true;
-            } else //El usuario/clave no se encuentra en la BD
-            {
-                return false;
-            }
-        } catch (Exception e) {
-            //Error en la conexión con la BD
-            System.out.println("No se ha completado la peticion...");
-            return false;
-        }
-    }
-
-    public boolean checkUserComplete(String email, String password) {
-        openConnectionDB();
-
-        ResultSet results = null;
-        try {
-            String con;
-            Statement s = conectionDB.createStatement();
-            //Consulta, buscamos una correspondencia usuario/clave
-            con = "SELECT name FROM users WHERE email='" + email + "' and password='" + password + "'";
             results = s.executeQuery(con);
 
             if (results.next()) //El usuario/clave se encuentra en la BD
@@ -171,4 +137,232 @@ public class DBAccess {
         }
     }
 
+    public ResultSet loginUser(String email, String password) {
+        openConnectionDB();
+
+        ResultSet user = null;
+        try {
+            String con;
+            Statement s = conectionDB.createStatement();
+
+            con = "SELECT * FROM users WHERE email='" + email + "' and password='" + password + "'";
+
+            user = s.executeQuery(con);
+        } catch (Exception e) {
+            //Error en la conexión con la BD
+            System.out.println("No se ha completado la peticion...");
+        }
+        return user;
+    }
+
+    public boolean updateUser(String email, String password, String name, String surname, String phoneNumber, String country, String city, String address, String passport, int id) {
+        openConnectionDB();
+
+        try {
+            String updateString;
+            Statement s = conectionDB.createStatement();
+            //Consulta, buscamos una correspondencia usuario/clave
+            updateString = "UPDATE users SET "
+                    + "email = '"
+                    + email + "', "
+                    + "password = '"
+                    + password + "', "
+                    + "name = '"
+                    + name + "', "
+                    + "surname = '"
+                    + surname + "', "
+                    + "phone = '"
+                    + phoneNumber + "', "
+                    + "country = '"
+                    + country + "', "
+                    + "city = '"
+                    + city + "', "
+                    + "address = '"
+                    + address + "', "
+                    + "passport = '"
+                    + passport + "' "
+                    + "WHERE id = "
+                    + id;
+            s.executeUpdate(updateString);
+            return true;
+
+        } catch (Exception e) {
+            //Error en la conexión con la BD
+            System.out.println("No se ha completado la peticion...");
+            return false;
+        }
+    }
+
+    public Integer getUserId(String email, String password) {
+        openConnectionDB();
+
+        ResultSet user;
+        Integer userId = null;
+        try {
+            String con;
+            Statement s = conectionDB.createStatement();
+            con = "SELECT id FROM users WHERE email='" + email + "' and password='" + password + "'";
+
+            user = s.executeQuery(con);
+
+            user.next();
+            userId = Integer.parseInt(user.getString("id"));
+        } catch (Exception e) {
+            //Error en la conexión con la BD
+            System.out.println("No se ha completado la peticion...");
+        }
+
+        return userId;
+    }
+
+    public String buyProducts(int userId, String cart) {
+        String message = "";
+
+        JSONArray products = new JSONArray(cart);
+
+        openConnectionDB();
+
+        ResultSet DBProducts = null;
+        String con;
+
+        int productsLength = products.length();
+        boolean notEnough = false;
+
+        String productIds = "";
+        for (int i = 0, l = productsLength; i < l; i++) {
+            JSONObject obj = products.getJSONObject(i);
+            if (i == l - 1) {
+                productIds += obj.getInt("id");
+            } else {
+                productIds += (obj.getInt("id") + ", ");
+            }
+        }
+
+        con = "SELECT id,stock FROM products WHERE id IN (" + productIds + ")";
+
+        try {
+            Statement s = conectionDB.createStatement();
+
+            DBProducts = s.executeQuery(con);
+
+            while (DBProducts.next()) { // check all products
+                productsLength--;
+            }
+
+            if (productsLength == 0) {    // request returned all products
+                DBProducts.beforeFirst();
+                productsLength = products.length();
+
+                // check stock
+                while (DBProducts.next()) {
+                    for (int i = 0, l = productsLength; i < l; i++) {
+                        JSONObject obj = products.getJSONObject(i);
+                        // check if product id == DBProduct id
+                        if (obj.getInt("id") == DBProducts.getInt("id")) {
+                            // check if user amount less than stock amount
+                            if (DBProducts.getInt("stock") - obj.getInt("amount") < 0) {
+                                // not enough in stock
+                                message += obj.getString("name") + " amount is " + DBProducts.getInt("stock") + " you want " + obj.getInt("amount") + " which is not enough<br>";
+                                notEnough = true;
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (!notEnough) {
+                    DBProducts.beforeFirst();
+
+                    // create purch
+                    Date date = new Date();
+                    java.sql.Timestamp dateTime = new java.sql.Timestamp(date.getTime());
+
+                    Statement s2 = conectionDB.createStatement();
+                    String purchaseString;
+                    int purchaseId = -1;
+                    float totalPrice = 0;
+                    purchaseString = "INSERT INTO purchases ("
+                            + "date, "
+                            + "status, "
+                            + "user_id, "
+                            + "total_price) "
+                            + "VALUES ('"
+                            + dateTime + "', '"
+                            + "Opened', "
+                            + userId + ", "
+                            + totalPrice + ")";
+                    s2.executeUpdate(purchaseString, Statement.RETURN_GENERATED_KEYS);
+//
+                    ResultSet generatedKeys = s2.getGeneratedKeys();
+                    if (generatedKeys.next()) {
+                        purchaseId = generatedKeys.getInt(1);
+                    }
+
+                    // create details
+                    String detailString = "";
+                    String updateProduct = "";
+                    while (DBProducts.next()) {
+                        for (int i = 0, l = productsLength; i < l; i++) {
+                            JSONObject obj = products.getJSONObject(i);
+                            // check if product id == DBProduct id
+                            if (obj.getInt("id") == DBProducts.getInt("id")) {
+                                // check if user amount less than stock amount
+                                int newStock = DBProducts.getInt("stock") - obj.getInt("amount");
+                                if (newStock >= 0) {
+                                    // create detail
+                                    totalPrice += obj.getInt("amount") * obj.getInt("price");
+                                    detailString = "INSERT INTO details ("
+                                            + "amount, "
+                                            + "price, "
+                                            + "product_id, "
+                                            + "purchase_id) "
+                                            + " VALUES ("
+                                            + obj.getInt("amount") + ", "
+                                            + obj.getInt("amount") * obj.getInt("price") + ", "
+                                            + obj.getInt("id") + ", "
+                                            + purchaseId + ")";
+                                    s2.executeUpdate(detailString);
+
+                                    // decrease stock                                    
+                                    updateProduct = "UPDATE products SET "
+                                            + "stock = "
+                                            + newStock + " "
+                                            + "WHERE id = "
+                                            + obj.getInt("id");
+                                    s2.executeUpdate(updateProduct);
+                                } else {
+                                    // not enough product
+                                    message += obj.getString("name") + " amount is not enough\n";
+                                }
+                                break;
+                            }
+                        }
+                    }
+
+                    // update purch with total price
+                    String updatePurchase;
+                    updatePurchase = "UPDATE purchases SET "
+                            + "total_price = '"
+                            + totalPrice + "' "
+                            + "WHERE id = "
+                            + purchaseId;
+                    s2.executeUpdate(updatePurchase);
+
+                    // success if message was not changed
+                    if (message == "") {
+                        message = "Success";
+                    }
+                }
+                return message;
+            } else {  // some products does not exist
+                message = "client error";
+                return message;
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DBAccess.class.getName()).log(Level.SEVERE, null, ex);
+            message = "db error";
+            return message;
+        }
+
+    }
 }

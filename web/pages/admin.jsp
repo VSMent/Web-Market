@@ -6,6 +6,6 @@
         <label for="adminPass">Password</label>
         <input class="loginInput" id="adminPass" name="pass" type="password" required><br>
         <input class="loginInput" name="submit" value="Send" type="submit"><br>
-        <p class="error">Type in your email and password</p>
+        <p class="error"></p>
     </form>
 </section>
